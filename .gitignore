@@ -47,3 +47,6 @@ Thumbs.db
 #data отражать папку, но скрыть файлы
 datasets/*
 !datasets/.gitkeep
+
+#.github
+.github/*
