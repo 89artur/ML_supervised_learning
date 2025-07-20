@@ -44,5 +44,6 @@ venv.bak/
 .DS_Store
 Thumbs.db
 
-#data
-datasets/
+#data отражать папку, но скрыть файлы
+datasets/*
+!datasets/.gitkeep
