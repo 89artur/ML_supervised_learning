@@ -45,4 +45,4 @@ venv.bak/
 Thumbs.db
 
 #data
-datasets/
+datasets
