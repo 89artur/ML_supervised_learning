@@ -1,11 +1,11 @@
-ame: Convert Jupyter Notebook to HTML
+name: Convert and Deploy Notebook
 on:
   push:
     branches: [ main, master ]
-  workflow_dispatch:  # Разрешает ручной запуск
+  workflow_dispatch:
 
 jobs:
-  convert:
+  convert-and-deploy:
     runs-on: ubuntu-latest
     steps:
       - name: Checkout repo
@@ -22,10 +22,12 @@ jobs:
 
       - name: Convert notebook to HTML
         run: |
-          jupyter nbconvert --to html master/ML_supervised_learning_project.ipynb # Замените на ваш файл .ipynb
+          jupyter nbconvert --to html master/ML_supervised_learning_project.ipynb --output-dir ./  # Генерируем HTML в корень
 
-      - name: Upload HTML as artifact
-        uses: actions/upload-artifact@v3
+      - name: Deploy to GitHub Pages
+        uses: peaceiris/actions-gh-pages@v3
         with:
-          name: notebook-report
-          path: master/notebook.html  # Путь к сгенерированному HTML
+          github_token: ${{ secrets.GITHUB_TOKEN }}
+          publish_dir: ./  # Публикуем корневую папку
+          publish_branch: gh-pages  # Специальная ветка для Pages
+          keep_files: true  # Сохраняет предыдущие файлы в ветке
