@@ -1,0 +1,21 @@
+name: Convert Notebook to HTML
+on: [push]
+
+jobs:
+  convert:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - name: Set up Python
+        uses: actions/setup-python@v4
+        with:
+          python-version: '3.10'
+      - name: Install nbconvert
+        run: pip install nbconvert
+      - name: Convert notebook
+        run: jupyter nbconvert --to html master/ML_supervised_learning_project.ipynb
+      - name: Upload HTML
+        uses: actions/upload-artifact@v3
+        with:
+          name: notebook-html
+          path: master/ML_supervised_learning_project.html
