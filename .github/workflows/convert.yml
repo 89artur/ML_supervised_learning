@@ -1,18 +1,19 @@
-name: Convert and Deploy Notebook
+name: Jupyter Notebook to GitHub Pages
 on:
   push:
     branches: [main, master]
   workflow_dispatch:
 
+permissions:
+  contents: write
+  pages: write
+  id-token: write
+
 jobs:
   convert-and-deploy:
     runs-on: ubuntu-latest
-    permissions:
-      contents: write
-      pages: write
-      id-token: write
     steps:
-      - name: Checkout repo
+      - name: Checkout repository
         uses: actions/checkout@v4
         with:
           fetch-depth: 0
@@ -20,7 +21,7 @@ jobs:
       - name: Set up Python
         uses: actions/setup-python@v4
         with:
-          python-version: '3.10'
+          python-version: "3.10"
 
       - name: Install dependencies
         run: |
@@ -28,17 +29,18 @@ jobs:
 
       - name: Convert notebook to HTML
         run: |
+          mkdir -p ./gh-pages
           jupyter nbconvert --to html master/ML_supervised_learning_project.ipynb \
-            --output-dir ./output/ \
+            --output-dir ./gh-pages/ \
             --output index.html
 
-      - name: Configure Pages
+      - name: Configure GitHub Pages
         uses: actions/configure-pages@v3
 
-      - name: Upload artifact (v4)
+      - name: Upload artifact
         uses: actions/upload-pages-artifact@v2
         with:
-          path: './output'
+          path: "./gh-pages"
 
       - name: Deploy to GitHub Pages
         uses: actions/deploy-pages@v2
