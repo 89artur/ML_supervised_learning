@@ -8,12 +8,14 @@ jobs:
   convert-and-deploy:
     runs-on: ubuntu-latest
     permissions:
-      contents: write  # Добавляем разрешение на запись
+      contents: write
+      pages: write
+      id-token: write
     steps:
       - name: Checkout repo
         uses: actions/checkout@v4
         with:
-          fetch-depth: 0  # Важно для работы с gh-pages
+          fetch-depth: 0
 
       - name: Set up Python
         uses: actions/setup-python@v4
@@ -26,13 +28,17 @@ jobs:
 
       - name: Convert notebook to HTML
         run: |
-          jupyter nbconvert --to html master/ML_supervised_learning_project.ipynb --output-dir ./
-          mv ML_supervised_learning_project.html index.html  # Переименовываем для главной страницы
+          jupyter nbconvert --to html master/ML_supervised_learning_project.ipynb --output-dir master/
+              --output-dir master/ \
+              --output notebook.html
+
+      - name: Setup Pages
+        uses: actions/configure-pages@v3
+
+      - name: Upload artifact
+        uses: actions/upload-pages-artifact@v2
+        with:
+          path: 'master/'  # Указываем папку с HTML
 
       - name: Deploy to GitHub Pages
-        uses: peaceiris/actions-gh-pages@v3
-        with:
-          github_token: ${{ secrets.GITHUB_TOKEN }}
-          publish_dir: ./
-          publish_branch: gh-pages
-          force_orphan: true  # Очищает ветку перед деплоем
+        uses: actions/deploy-pages@v2
